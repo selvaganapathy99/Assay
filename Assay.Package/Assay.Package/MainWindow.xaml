@@ -1,0 +1,172 @@
+﻿<Window x:Class="Assay.Package.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Sync="http://schemas.syncfusion.com/wpf"
+        xmlns:local="clr-namespace:Assay.Package"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        Title="Assay - Package" Icon="Assay.ico"
+        Width="705" x:Name="mainWindow"
+        Height="550"
+        AllowDrop="True">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <local:MainWindowClosingAction TargetObject="{Binding ElementName=mainWindow}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Window.DataContext>
+        <local:ViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Ribbon Margin="0 -23 0 0">
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu>
+                    <RibbonApplicationMenu.SmallImageSource>
+                        <DrawingImage>
+                            <DrawingImage.Drawing>
+                                <GlyphRunDrawing ForegroundBrush="White">
+                                    <GlyphRunDrawing.GlyphRun>
+                                        <GlyphRun AdvanceWidths="5.859375 2.90625 2.90625 6.275390625"
+                                                  CaretStops="{x:Null}"
+                                                  ClusterMap="{x:Null}"
+                                                  DeviceFontName="{x:Null}"
+                                                  FontRenderingEmSize="12"
+                                                  GlyphIndices="41 76 79 72"
+                                                  GlyphOffsets="{x:Null}"
+                                                  IsSideways="False">
+                                            <GlyphRun.GlyphTypeface>
+                                                <GlyphTypeface FontUri="C:\WINDOWS\Fonts\SEGOEUI.TTF" />
+                                            </GlyphRun.GlyphTypeface>
+                                        </GlyphRun>
+                                    </GlyphRunDrawing.GlyphRun>
+                                </GlyphRunDrawing>
+                            </DrawingImage.Drawing>
+                        </DrawingImage>
+                    </RibbonApplicationMenu.SmallImageSource>
+
+                    <RibbonApplicationMenuItem Command="{Binding ExitCommand}" Header="Exit">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <local:MainWindowClosingAction TargetObject="{Binding ElementName=mainWindow}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </RibbonApplicationMenuItem>
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+            <RibbonTab Header="Home">
+                <RibbonGroup Header="Clipboard">
+                    <RibbonButton Command="{Binding OpenCommand}"
+                                  Label="Open"
+                                  LargeImageSource="/Assets/Copy32.png"
+                                  ToolTip="Open" />
+
+                    <RibbonButton Command="{Binding CopyCommand}"
+                                  Label="Copy"
+                                  LargeImageSource="/Assets/Copy32.png"
+                                  ToolTip="Copy" />
+                    <RibbonButton Command="{Binding PasteCommand}"
+                                  Label="Paste"
+                                  LargeImageSource="/Assets/Paste32.png"
+                                  ToolTip="Paste" />
+                    <StackPanel>
+                        <RibbonButton HorizontalAlignment="Left"
+                                      Command="{Binding CutCommand}"
+                                      Label="Cut"
+                                      SmallImageSource="/Assets/Cut16.png" />
+                        <RibbonButton Command="{Binding CopyPathCommand}" Label="Copy Path" />
+                    </StackPanel>
+                </RibbonGroup>
+                <RibbonGroup Header="Organize">
+                    <RibbonButton Command="{Binding DeleteCommand}"
+                                  Label="Delete"
+                                  LargeImageSource="/Assets/Delete32.png"
+                                  ToolTip="Delete the item" />
+                    <!--
+                        <RibbonButton Label="Rename"
+                        LargeImageSource="/Assets/Rename32.png"
+                        ToolTip="Rename the selected item" />
+                    -->
+
+                </RibbonGroup>
+                <RibbonGroup Header="Zip Files">
+                    <RibbonButton Command="{Binding SaveCommand}"
+                                  CommandParameter="{Binding ToolTipName}"
+                                  Label="Save"
+                                  LargeImageSource="/Assets/Zip32.png"
+                                  ToolTip="Save Zip" />
+
+                    <RibbonButton Command="{Binding SaveAsCommand}"
+                                  CommandParameter="{Binding FileName}"
+                                  Label="Save As"
+                                  LargeImageSource="/Assets/Zip32.png"
+                                  ToolTip="Save as Zip" />
+                </RibbonGroup>
+                <RibbonGroup Header="New">
+                    <RibbonButton Command="{Binding NewItemCommand}"
+                                  CommandParameter="fl"
+                                  Label="New Folder"
+                                  LargeImageSource="/Assets/NewFolder32.png"
+                                  ToolTip="Create New Folder" />
+                    <RibbonButton Command="{Binding NewItemCommand}"
+                                  CommandParameter="txt"
+                                  Label="New Text Document"
+                                  LargeImageSource="/Assets/Text32.png"
+                                  ToolTip="Create New Text Document" />
+                    <RibbonButton Command="{Binding NewItemCommand}"
+                                  CommandParameter="xml"
+                                  Label="New Text Xml"
+                                  LargeImageSource="/Assets/Xml32.png"
+                                  ToolTip="Create New xml Document" />
+                </RibbonGroup>
+            </RibbonTab>
+            <RibbonTab Header="View">
+                <RibbonGroup Header="Panes" ItemsSource="{Binding PaneList}">
+                    <RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <RibbonRadioButton GroupName="Pane"
+                                               IsChecked="{Binding IsChecked}"
+                                               Label="{Binding Name,
+                                                               Mode=TwoWay}"
+                                               SmallImageSource="/Assets/DetailsPane.png" />
+                        </DataTemplate>
+                    </RibbonGroup.ItemTemplate>
+                </RibbonGroup>
+                <RibbonGroup Header="Layout" ItemsSource="{Binding LayoutList}">
+                    <RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <RibbonRadioButton GroupName="Layout"
+                                               IsChecked="{Binding IsChecked}"
+                                               Label="{Binding Name,
+                                                               Mode=TwoWay}"
+                                               SmallImageSource="/Assets/DetailsPane.png" />
+                        </DataTemplate>
+                    </RibbonGroup.ItemTemplate>
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="150" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" MinWidth="300" />
+            </Grid.ColumnDefinitions>
+            <local:LeftSidePane x:Name="leftSidePane" />
+            <GridSplitter Grid.Column="1"
+                          Width="3"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch" />
+            <local:MainContentHost Grid.Column="2" />
+            <GridSplitter Grid.Column="3"
+                          Width="2"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Stretch" />
+            <local:RightSidePane Grid.Column="4" />
+        </Grid>
+    </Grid>
+</Window>

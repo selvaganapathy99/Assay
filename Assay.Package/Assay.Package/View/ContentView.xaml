@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="Assay.Package.ContentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:Assay.Package"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Name="mainControl"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+        <local:LayoutConverter x:Key="layoutConverter" />
+    </UserControl.Resources>
+    <Grid DataContext="{Binding LayoutList}" Visibility="{Binding [1].IsChecked, Converter={StaticResource layoutConverter}}">
+        <Grid DataContext="{Binding DataContext, ElementName=mainControl}">
+            <ListView x:Name="listView"
+                      AllowDrop="True"
+                      BorderThickness="0"
+                      DataContext="{Binding}"
+                      ItemsSource="{Binding SelectedItem.Items}"
+                      SelectedItem="{Binding ContentSelectedItem}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <local:ListViewClickAction TargetObject="{Binding ElementName=listView}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="KeyDown">
+                        <local:ListViewRenameAction TargetObject="{Binding ElementName=listView}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Drop">
+                        <local:ListViewDropAction TargetObject="{Binding ElementName=listView}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseMove">
+                        <local:ListViewItemDragAndDropAction TargetObject="{Binding ElementName=listView}" />
+                    </i:EventTrigger>
+
+                </i:Interaction.Triggers>
+                <ListView.View>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource myHeaderStyle}">
+                        <GridViewColumn Width="800">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="10 15 0 0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="550" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                            <Image Width="32"
+                                                   Height="32"
+                                                   Source="{Binding Icon}" />
+                                            <TextBlock x:Name="txtBlock"
+                                                       FontSize="18"
+                                                       Text="{Binding Name}" />
+                                            <TextBox x:Name="editTextBox"
+                                                     Grid.Column="1"
+                                                     Margin="1"
+                                                     Text="{Binding Name,
+                                                                    Mode=TwoWay}"
+                                                     Visibility="Collapsed" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1"
+                                                    HorizontalAlignment="Right"
+                                                    Orientation="Horizontal">
+                                            <TextBlock FontSize="14" Text="Date modified : " />
+                                            <TextBlock FontSize="14" Text="{Binding LastModifiedDate, StringFormat=g}" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.IsEditing, RelativeSource={RelativeSource Self}}" Value="True">
+                                            <Setter TargetName="txtBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="editTextBox" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="New">
+                            <MenuItem Command="{Binding NewItemCommand}"
+                                      CommandParameter="fl"
+                                      Header="New Folder" />
+                            <MenuItem Command="{Binding NewItemCommand}"
+                                      CommandParameter="txt"
+                                      Header="New Text Document" />
+                            <MenuItem Command="{Binding NewItemCommand}"
+                                      CommandParameter="xml"
+                                      Header="New Xml Document" />
+                        </MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>

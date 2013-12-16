@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="Assay.Package.MediumIconsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:Assay.Package"
+             x:Name="mainControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" 
+             d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="myHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+        <local:LayoutConverter x:Key="layoutConverter" />
+    </UserControl.Resources>
+    <Grid DataContext="{Binding LayoutList}" Visibility="{Binding [3].IsChecked, Converter={StaticResource layoutConverter}}">
+        <Grid DataContext="{Binding DataContext, ElementName=mainControl}">
+            <ListView x:Name="listView"
+                      AllowDrop="True"
+                      BorderThickness="0"
+                      DataContext="{Binding}"
+                      ItemsSource="{Binding SelectedItem.Items}"
+                      SelectedItem="{Binding ContentSelectedItem}">
+                <ListView.Template>
+                    <ControlTemplate TargetType="ListView">
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" Padding="1" SnapsToDevicePixels="true">
+                            <ScrollViewer Focusable="false" Padding="{TemplateBinding Padding}">
+                                <WrapPanel Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}"  IsItemsHost="True" Orientation="Horizontal"/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </ListView.Template>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <local:ListViewClickAction TargetObject="{Binding ElementName=listView}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="KeyDown">
+                        <local:ListViewRenameAction TargetObject="{Binding ElementName=listView}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Drop">
+                        <local:ListViewDropAction TargetObject="{Binding ElementName=listView}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseMove">
+                        <local:ListViewItemDragAndDropAction TargetObject="{Binding ElementName=listView}" />
+                    </i:EventTrigger>
+
+                </i:Interaction.Triggers>
+                <ListView.View>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource myHeaderStyle}">
+                        <GridViewColumn Width="75" Header="Name">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="49" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Image Width="33" HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                               Height="49" Grid.Row="0"
+                                               Margin="1"
+                                               Source="{Binding Icon}" />
+                                        <TextBlock x:Name="txtBlock" 
+                                                   Grid.Row="1"
+                                                   Margin="1" HorizontalAlignment="Center" VerticalAlignment="Top"
+                                                   Text="{Binding Name,
+                                                                  Mode=TwoWay}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBox x:Name="editTextBox"
+                                                 Grid.Column="1"
+                                                 Margin="1"
+                                                 Text="{Binding Name,
+                                                                Mode=TwoWay}"
+                                                 Visibility="Collapsed" />
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.IsEditing,RelativeSource={RelativeSource Self}}" Value="True">
+                                            <Setter TargetName="txtBlock" Property="Visibility" Value="Collapsed" />
+                                            <Setter TargetName="editTextBox" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+    </Grid>
+</UserControl>

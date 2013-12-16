@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="Assay.Package.RightSidePane"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Assay.Package"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sync="http://schemas.syncfusion.com/wpf"
+             x:Name="mainControl"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <sync:BoolToVisibilityConverter x:Key="booltovisible" />
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="Black" />
+        </Style>
+        <local:PreviewPaneConverter x:Key="paneConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid x:Name="mainGrid"
+              Margin="20 5 0 0"
+              DataContext="{Binding PaneList}"
+              Visibility="{Binding [0].IsChecked,
+                                   ConverterParameter='Details Pane',
+                                   Converter={StaticResource paneConverter}}">
+
+            <StackPanel HorizontalAlignment="Left" DataContext="{Binding DataContext.RightSideContent, ElementName=mainControl}">
+                <TextBlock FontSize="17" Text="{Binding Name}" />
+                <TextBlock Margin="0 5 0 0 "
+                           FontSize="14"
+                           Text="{Binding Type}" />
+                <Image Width="32" Margin="0 15 0 30"
+                       Height="32" HorizontalAlignment="Left"
+                       Source="{Binding Icon}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="110" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Date Modified :" />
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               Text="{Binding LastModifiedDate,
+                                              StringFormat=g}" />
+
+                    <TextBlock Grid.Row="1" Text="Size :" />
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="1"
+                                Orientation="Horizontal">
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="1"
+                                   FontSize="14"
+                                   Text="{Binding Size}" />
+                        <TextBlock Grid.Column="1"
+                                   Margin="1"
+                                   Text=" KB" />
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="2" Text="Date Created :" />
+                    <TextBlock Grid.Row="2"
+                               Grid.Column="2"
+                               Text="{Binding CreatedDate,
+                                              StringFormat=g}" />
+                </Grid>
+
+            </StackPanel>
+        </Grid>
+
+        <Grid DataContext="{Binding PaneList}" Visibility="{Binding [1].IsChecked, ConverterParameter='Preview Pane', Converter={StaticResource paneConverter}}">
+            <Grid DataContext="{Binding DataContext.ContentSelectedItem, ElementName=mainControl}">
+                <Image Width="100"
+                       Height="100"
+                       Margin="5,0,5,0"
+                       VerticalAlignment="Center"
+                       Source="{Binding TextContent}"
+                       Visibility="{Binding IsImageVisible,
+                                            Converter={StaticResource booltovisible}}" />
+                <ScrollViewer Margin="5,0,5,0"
+                              VerticalAlignment="Stretch"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto"
+                              Visibility="{Binding IsTextVisible,
+                                                   Converter={StaticResource booltovisible}}">
+                    <TextBlock HorizontalAlignment="Left"
+                               VerticalAlignment="Stretch"
+                               FontSize="12"
+                               Text="{Binding TextContent}" />
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+
+    </Grid>
+</UserControl>

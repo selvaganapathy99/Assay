@@ -1,0 +1,523 @@
+﻿<UserControl x:Class="Assay.Package.LeftSidePane"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Sync="http://schemas.syncfusion.com/wpf"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:Assay.Package"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:FileVisibiltyConveter x:Key="booltovisible" />
+        <local:ExpandButtonVisibiltyConveter x:Key="expandButtonVisiblityCoverter" />
+        <HierarchicalDataTemplate x:Key="treeViewItemTemplate" ItemsSource="{Binding Items}">
+            <StackPanel Orientation="Horizontal">
+                <Image Width="16"
+                       Height="16"
+                       Source="{Binding Icon}" />
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <Style x:Key="itemstyle" TargetType="Sync:TreeViewItemAdv">
+            <Setter Property="Visibility" Value="{Binding IsFile, Converter={StaticResource booltovisible}}" />
+            <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Sync:TreeViewItemAdv">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Border Name="Part_TopDragLine"
+                                    Grid.Row="0"
+                                    Height="2"
+                                    Visibility="Collapsed" />
+                            <Grid Grid.Row="1"
+                                  Background="Transparent"
+                                  Focusable="False"
+                                  TextElement.Foreground="{Binding Path=Foreground,
+                                                                   RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Name="VertLineGrid"
+                                      Grid.Row="0"
+                                      Grid.RowSpan="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Sync:TreeRootLine Name="PART_VerticalLinePartOne"
+                                                       Grid.Row="0"
+                                                       Width="{Binding Path=LineStrokeThickness,
+                                                                       RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       Margin="0,0,0,0"
+                                                       Panel.ZIndex="0"
+                                                       Focusable="False"
+                                                       IsVerticalLine="True"
+                                                       LineBrush="{Binding Path=LineBrush,
+                                                                           RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       LineStrokeThickness="{Binding Path=LineStrokeThickness,
+                                                                                     RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       SnapsToDevicePixels="True"
+                                                       Visibility="Visible" />
+                                    <Sync:TreeRootLine Name="PART_VerticalLinePartTwo"
+                                                       Grid.Row="1"
+                                                       Width="{Binding Path=LineStrokeThickness,
+                                                                       RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       Margin="0,0,0,0"
+                                                       Panel.ZIndex="0"
+                                                       Focusable="False"
+                                                       IsVerticalLine="True"
+                                                       LineBrush="{Binding Path=LineBrush,
+                                                                           RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       LineStrokeThickness="{Binding Path=LineStrokeThickness,
+                                                                                     RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       SnapsToDevicePixels="True"
+                                                       Visibility="Visible" />
+                                </Grid>
+                                <Grid Name="HorLineGrid">
+                                    <Sync:TreeRootLine Name="PART_HorizontalLine"
+                                                       Grid.Row="0"
+                                                       Width="13"
+                                                       Height="{Binding Path=LineStrokeThickness,
+                                                                        RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       Margin="9,0,-3,0"
+                                                       HorizontalAlignment="Right"
+                                                       Panel.ZIndex="0"
+                                                       Focusable="False"
+                                                       IsVerticalLine="False"
+                                                       LineBrush="{Binding Path=LineBrush,
+                                                                           RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       LineStrokeThickness="{Binding Path=LineStrokeThickness,
+                                                                                     RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                       SnapsToDevicePixels="True" />
+                                </Grid>
+                                <Sync:BottomLine Name="BottomBorder"
+                                                 Grid.Row="0"
+                                                 Grid.Column="0"
+                                                 Margin="0,0,0,1"
+                                                 Fill="Transparent"
+                                                 SnapsToDevicePixels="True"
+                                                 TargetItem="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                                     AncestorType={x:Type Sync:TreeViewItemAdv}}}" />
+
+                                <Sync:SelectRectangle Name="PART_SelectRectangle"
+                                                      Grid.Row="0"
+                                                      Grid.Column="0"
+                                                      Margin="0,0,0,1"
+                                                      Fill="Transparent"
+                                                      SnapsToDevicePixels="True"
+                                                      TargetItem="{Binding RelativeSource={RelativeSource FindAncestor,
+                                                                                                          AncestorType={x:Type Sync:TreeViewItemAdv}}}" />
+                                <Expander Name="PART_Expander"
+                                          Grid.Row="0"
+                                          Grid.Column="0"
+                                          Height="13"
+                                          Margin="1,0,0,0"
+                                          HorizontalAlignment="Center"
+                                          Panel.ZIndex="100"
+                                          Background="{Binding Path=Background,
+                                                               RelativeSource={RelativeSource FindAncestor,
+                                                                                              AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                          Focusable="False"
+                                          IsExpanded="{Binding Path=IsExpanded,
+                                                               RelativeSource={RelativeSource TemplatedParent}}"
+                                          Style="{TemplateBinding Sync:TreeViewAdv.ExpanderStyle}"
+                                          Visibility="{Binding Converter={StaticResource expandButtonVisiblityCoverter}}" />
+
+                                <Ellipse x:Name="path"
+                                         Grid.Row="0"
+                                         Grid.Column="0"
+                                         Width="12"
+                                         Height="12"
+                                         Margin="1,0,0,0"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         Panel.ZIndex="100"
+                                         Fill="White"
+                                         RenderTransformOrigin="0.5,0.5"
+                                         Stretch="Fill"
+                                         StrokeThickness="2"
+                                         Visibility="Collapsed">
+                                    <Ellipse.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform />
+                                            <SkewTransform />
+                                            <RotateTransform />
+                                            <TranslateTransform />
+                                        </TransformGroup>
+                                    </Ellipse.RenderTransform>
+                                    <Ellipse.Stroke>
+                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                            <GradientStop Offset="0" Color="#FF2382E1" />
+                                            <GradientStop Offset="1" Color="#FF08FFB3" />
+                                            <GradientStop Offset="0.591" Color="#FF04D0FA" />
+                                        </LinearGradientBrush>
+                                    </Ellipse.Stroke>
+                                </Ellipse>
+
+                                <Grid Grid.Row="0"
+                                      Grid.Column="1"
+                                      Panel.ZIndex="20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Name="PART_CompleteHeader" Orientation="Horizontal">
+                                        <StackPanel Name="PART_ImagePanel" Orientation="Horizontal">
+                                            <Image Name="ExpanderImage"
+                                                   Width="{TemplateBinding ImageWidth}"
+                                                   Height="{TemplateBinding ImageHeight}"
+                                                   Focusable="False"
+                                                   Source="{TemplateBinding ExpandedImageSource}"
+                                                   Stretch="{TemplateBinding ImageStretch}"
+                                                   Visibility="Collapsed" />
+
+                                            <Image Name="CollapsedImage"
+                                                   Width="{TemplateBinding ImageWidth}"
+                                                   Height="{TemplateBinding ImageHeight}"
+                                                   Focusable="False"
+                                                   Source="{TemplateBinding CollapsedImageSource}"
+                                                   Stretch="{TemplateBinding ImageStretch}" />
+                                            <Image Name="LeftImage"
+                                                   Width="{TemplateBinding ImageWidth}"
+                                                   Height="{TemplateBinding ImageHeight}"
+                                                   Margin="2,0,0,0"
+                                                   Focusable="False"
+                                                   Source="{TemplateBinding LeftImageSource}"
+                                                   Stretch="{TemplateBinding ImageStretch}" />
+                                        </StackPanel>
+
+                                        <StackPanel Name="PART_ItemContent"
+                                                    VerticalAlignment="Center"
+                                                    Focusable="True"
+                                                    KeyboardNavigation.TabNavigation="Cycle">
+                                            <Border Name="Bd"
+                                                    MinHeight="19"
+                                                    Background="{TemplateBinding Panel.Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="2"
+                                                    Padding="{TemplateBinding Padding}"
+                                                    SnapsToDevicePixels="True"
+                                                    TextElement.Foreground="{TemplateBinding Foreground}"
+                                                    ToolTip="{TemplateBinding Sync:TreeViewItemAdv.Header}"
+                                                    ToolTipService.HorizontalOffset="4"
+                                                    ToolTipService.IsEnabled="False"
+                                                    ToolTipService.Placement="Center"
+                                                    ToolTipService.VerticalOffset="2">
+                                                <Grid>
+                                                    <ContentPresenter Name="PART_Header"
+                                                                      HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                                                      VerticalAlignment="Center"
+                                                                      Content="{TemplateBinding Sync:TreeViewItemAdv.Header}"
+                                                                      ContentSource="Header"
+                                                                      ContentTemplate="{TemplateBinding Sync:TreeViewItemAdv.HeaderTemplate}"
+                                                                      ContentTemplateSelector="{TemplateBinding Sync:TreeViewItemAdv.HeaderTemplateSelector}"
+                                                                      Visibility="Visible" />
+                                                    <ContentPresenter x:Name="LoadingContentPresenter"
+                                                                      HorizontalAlignment="Left"
+                                                                      Content="{TemplateBinding LoadingHeader}"
+                                                                      ContentTemplate="{TemplateBinding LoadingHeaderTemplate}"
+                                                                      Visibility="Collapsed" />
+
+                                                </Grid>
+                                            </Border>
+
+
+                                            <ContentPresenter Name="PART_EditHeader"
+                                                              HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}"
+                                                              VerticalAlignment="Center"
+                                                              Content="{Binding Path=Header,
+                                                                                RelativeSource={RelativeSource FindAncestor,
+                                                                                                               AncestorType={x:Type Sync:TreeViewItemAdv}}}"
+                                                              ContentSource="Header"
+                                                              ContentTemplate="{Binding Path=EditedItemTemplate,
+                                                                                        RelativeSource={RelativeSource FindAncestor,
+                                                                                                                       AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                              ContentTemplateSelector="{Binding Path=EditedItemTemplateSelector,
+                                                                                                RelativeSource={RelativeSource FindAncestor,
+                                                                                                                               AncestorType={x:Type Sync:TreeViewAdv}}}"
+                                                              Visibility="Collapsed" />
+                                        </StackPanel>
+
+                                        <Image Name="RightImage"
+                                               Width="{TemplateBinding ImageWidth}"
+                                               Height="{TemplateBinding ImageHeight}"
+                                               Margin="3,0,3,0"
+                                               Focusable="False"
+                                               Source="{TemplateBinding RightImageSource}"
+                                               Stretch="{TemplateBinding ImageStretch}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Grid.Row="1" Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ItemsPresenter Name="PART_ItemsHost" Visibility="Collapsed" />
+                                </Grid>
+                            </Grid>
+                            <Border Name="Part_BottomDragLine"
+                                    Grid.Row="2"
+                                    Height="2"
+                                    Visibility="Collapsed" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Sync:SkinStorage.EnableTouch" Value="true">
+                                <Setter Property="FontSize" Value="18" />
+                                <Setter Property="Padding" Value="12,9.5,12,9.5" />
+                                <Setter TargetName="BottomBorder" Property="Fill" Value="{Binding Path=BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type Sync:TreeViewAdv}}}" />
+
+
+
+                            </Trigger>
+                            <Trigger Property="Sync:TreeViewItemAdv.IsShowToolTip" Value="True">
+                                <Setter TargetName="Bd" Property="ToolTipService.IsEnabled" Value="True" />
+                            </Trigger>
+                            <Trigger Property="Sync:TreeViewItemAdv.LeftImageSource" Value="{x:Null}">
+                                <Setter TargetName="LeftImage" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="Sync:TreeViewItemAdv.RightImageSource" Value="{x:Null}">
+                                <Setter TargetName="RightImage" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="Sync:TreeViewItemAdv.IsExpanded" Value="True">
+                                <Setter TargetName="ExpanderImage" Property="Source" Value="{Binding Path=ExpandedImageSource, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <Setter TargetName="CollapsedImage" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="ExpanderImage" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="PART_ItemsHost" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="Sync:TreeViewItemAdv.IsExpanded" Value="False">
+                                <Setter TargetName="CollapsedImage" Property="Source" Value="{Binding Path=CollapsedImageSource, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <Setter TargetName="ExpanderImage" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="CollapsedImage" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="PART_ItemsHost" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsExpanded" Value="True" />
+                                    <Condition Property="Sync:TreeViewItemAdv.ExpandedImageSource" Value="{x:Null}" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="ExpanderImage" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="LeftImage" Property="Margin" Value="0" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsExpanded" Value="False" />
+                                    <Condition Property="Sync:TreeViewItemAdv.CollapsedImageSource" Value="{x:Null}" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="CollapsedImage" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="LeftImage" Property="Margin" Value="0" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsExpanded" Value="True" />
+                                    <Condition Property="Sync:TreeViewItemAdv.ExpandedImageSource" Value="{x:Null}" />
+                                    <Condition Property="Sync:TreeViewItemAdv.LeftImageSource" Value="{x:Null}" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_ImagePanel" Property="Visibility" Value="Collapsed" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsExpanded" Value="False" />
+                                    <Condition Property="Sync:TreeViewItemAdv.CollapsedImageSource" Value="{x:Null}" />
+                                    <Condition Property="Sync:TreeViewItemAdv.LeftImageSource" Value="{x:Null}" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_ImagePanel" Property="Visibility" Value="Collapsed" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsEditable" Value="True" />
+                                    <Condition Property="Sync:TreeViewItemAdv.IsInEditMode" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_Header" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="Bd" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="PART_EditHeader" Property="Visibility" Value="Visible" />
+                            </MultiTrigger>
+                            <Trigger Property="Sync:TreeViewAdv.ShowRootLines" Value="False">
+                                <Setter TargetName="HorLineGrid" Property="Visibility" Value="Hidden" />
+                                <Setter TargetName="VertLineGrid" Property="Visibility" Value="Hidden" />
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.HasItems" Value="False" />
+                                    <Condition Property="Sync:TreeViewItemAdv.IsLoadOnDemand" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_Expander" Property="Visibility" Value="Hidden" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="HeaderedContentControl.HasHeader" Value="False" />
+                                    <Condition Property="FrameworkElement.Width" Value="NaN" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_Header" Property="FrameworkElement.MinWidth" Value="75" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="HeaderedContentControl.HasHeader" Value="False" />
+                                    <Condition Property="FrameworkElement.Height" Value="NaN" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_Header" Property="FrameworkElement.MinHeight" Value="19" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition SourceName="PART_CompleteHeader" Property="IsMouseOver" Value="True" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="false" />
+                                </MultiTrigger.Conditions>
+
+
+                                <Setter TargetName="Bd" Property="Panel.Background" Value="{Binding Path=MouseOverBackground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=MouseOverForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{Binding Path=MouseOverBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition SourceName="PART_CompleteHeader" Property="IsMouseOver" Value="True" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="true" />
+                                </MultiTrigger.Conditions>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsSelected" Value="True" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="false" />
+                                </MultiTrigger.Conditions>
+
+                                <Setter TargetName="Bd" Property="Panel.Background" Value="{Binding Path=SelectedBackground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=SelectedForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{Binding Path=SelectedBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsSelected" Value="True" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="true" />
+                                </MultiTrigger.Conditions>
+
+                                <Setter TargetName="PART_SelectRectangle" Property="Fill" Value="{Binding Path=SelectedBackground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=SelectedForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <!--  <Setter Property="Fill" TargetName="BottomBorder" Value="{Binding Path=SelectedBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}"/>  -->
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsSelectedFalse" Value="True" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="false" />
+                                </MultiTrigger.Conditions>
+
+                                <Setter TargetName="Bd" Property="Panel.Background" Value="{Binding Path=SelectedBackground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=SelectedForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{Binding Path=SelectedBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsSelectedFalse" Value="True" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="true" />
+                                </MultiTrigger.Conditions>
+
+                                <Setter TargetName="PART_SelectRectangle" Property="Fill" Value="{Binding Path=SelectedBackground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=SelectedForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <!--  <Setter Property="Fill" TargetName="BottomBorder" Value="{Binding Path=SelectedBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type des:TreeViewAdv}}}" />  -->
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsDragOver" Value="True" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="false" />
+                                </MultiTrigger.Conditions>
+
+                                <Setter TargetName="Bd" Property="Panel.Background" Value="{Binding Path=MouseOverBackground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=MouseOverForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{Binding Path=SelectedBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsDragOver" Value="True" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="true" />
+                                </MultiTrigger.Conditions>
+
+                                <Setter TargetName="PART_SelectRectangle" Property="Fill" Value="{Binding Path=MouseOverBackground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=MouseOverForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <!--  <Setter Property="Fill" TargetName="BottomBorder" Value="{Binding Path=SelectedBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />  -->
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsSelected" Value="True" />
+                                    <Condition Property="Sync:TreeViewItemAdv.IsSelectionActive" Value="False" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="false" />
+                                    <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Panel.Background" Value="{Binding Path=SelectionUnfocussedBackcolor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=SelectedForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{Binding Path=SelectedBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Sync:TreeViewItemAdv.IsSelected" Value="True" />
+                                    <Condition Property="Sync:TreeViewItemAdv.IsSelectionActive" Value="False" />
+                                    <Condition Property="Sync:SkinStorage.EnableTouch" Value="true" />
+                                    <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_SelectRectangle" Property="Fill" Value="{Binding Path=SelectionUnfocussedBackcolor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=SelectedForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                                <!--  <Setter Property="Fill" TargetName="BottomBorder" Value="{Binding Path=SelectedBorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />  -->
+                            </MultiTrigger>
+                            <Trigger Property="Sync:TreeViewItemAdv.IsDraging" Value="True">
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{Binding Path=SelectedForeground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Sync:TreeViewAdv}}}" />
+                            </Trigger>
+                            <Trigger Property="UIElement.IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                                <Setter TargetName="RightImage" Property="Opacity" Value="0.7" />
+                                <Setter TargetName="LeftImage" Property="Opacity" Value="0.7" />
+                            </Trigger>
+                            <Trigger Property="Sync:TreeViewItemAdv.IsLoadOnDemand" Value="True">
+                                <Setter TargetName="PART_Expander" Property="Visibility" Value="Visible" />
+                            </Trigger>
+
+                            <Trigger Property="Sync:TreeViewItemAdv.IsLoading" Value="True">
+                                <Setter TargetName="PART_Expander" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="LoadingContentPresenter" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="PART_Header" Property="Visibility" Value="Collapsed" />
+                                <Setter TargetName="path" Property="Visibility" Value="Visible" />
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Sync:TreeViewAdv x:Name="zipTreeView"
+                          Margin="0 5 0 0"
+                          AllowDragDrop="True"
+                          AllowDrop="True"
+                          AllowMultiSelect="False"
+                          AnimationType="None"
+                          BorderThickness="0 0 0 0"
+                          IsScrollOnExpand="False"
+                          ItemContainerStyle="{StaticResource itemstyle}"
+                          ItemTemplate="{StaticResource treeViewItemTemplate}"
+                          ItemsSource="{Binding DirectoryList}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ShowRootLines="False"
+                          Sync:TreeViewAdvSelectedItemChangedCommand.Command="{Binding SelectedItemChangedCommand}"
+                          Sync:TreeViewAdvSelectedItemChangedCommand.CommandParameter="{Binding Path=SelectedItem,
+                                                                                                RelativeSource={RelativeSource Self}}" />
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Drop">
+                <local:TreeViewAdvDragAndDrop TargetObject="{Binding ElementName=zipTreeView}" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+    </Grid>
+</UserControl>
